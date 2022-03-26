@@ -1,20 +1,32 @@
 <template>
   <div class="spec">
-    <p class="name">美好即刻呈现富士手机照片打印机miniLink</p>
-    <p class="desc">轻巧便携，高效出片</p>
+    <p class="name">{{ list.name }}</p>
+    <p class="desc">{{ list.desc }}</p>
     <p class="price">
-      <span>72.00</span>
-      <span>72.00</span>
+      <span>{{ list.price }}</span>
+      <span>{{ list.oldPrice }}</span>
     </p>
     <City />
+    <Specifications :specs="list.specs" :skus="list.skus" />
+    <Number />
+    <div class="button">加入购物车</div>
   </div>
 </template>
 <script>
 import City from "./city.vue";
+import Specifications from "./Specifications.vue";
+import Number from "./number.vue";
+import { ref } from "vue";
 export default {
   name: "Spec",
   components: {
     City,
+    Specifications,
+    Number,
+  },
+  props: {
+    list: Object,
+    default: () => {},
   },
 };
 </script>
@@ -52,6 +64,18 @@ export default {
         font-size: 12px;
       }
     }
+  }
+  .button {
+    width: 180px;
+    height: 50px;
+    font-size: 16px;
+    color: white;
+    background-color: @xtxColor;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
   }
 }
 </style>

@@ -1,32 +1,26 @@
 <template>
   <div class="picture">
     <div class="top">
-      <div class="img" v-if="imgUrl" ref="target">
-        <img :src="imgUrl" alt="" />
+      <div class="img" v-if="img[imgIndex]" ref="target">
+        <img :src="img[imgIndex]" alt="" />
         <div class="layer" v-show="show" :style="position"></div>
       </div>
-
+      <div class="imgElse" v-else></div>
       <div class="imgMini">
         <ul>
           <li
-            v-for="(item, index) in 5"
+            v-for="(item, index) in img"
             :key="index"
-            @mouseover="
-              imgUrl =
-                'https://yanxuan-item.nosdn.127.net/c6b55b6c00180b568c0dd9beabeebe01.png'
-            "
+            @mouseover="imgIndex = index"
           >
-            <img
-              src="https://yanxuan-item.nosdn.127.net/c6b55b6c00180b568c0dd9beabeebe01.png"
-              alt=""
-            />
+            <img v-lazyload="item" alt="" />
           </li>
         </ul>
       </div>
       <div
         class="imgMax"
         v-show="show"
-        :style="[{ backgroundImage: `url(${imgUrl})` }, bgPosition]"
+        :style="[{ backgroundImage: `url(${img[imgIndex]})` }, bgPosition]"
       ></div>
     </div>
     <ul class="btn">
@@ -43,9 +37,14 @@ import { reactive, ref, watch } from "vue";
 import { useMouseInElement } from "@vueuse/core";
 export default {
   name: "Picture",
+  props: {
+    img: {
+      type: Array,
+      default: () => [],
+    },
+  },
   setup(props) {
-    const imgUrl = ref("");
-
+    let imgIndex = ref(0);
     const usePreviewImg = () => {
       const target = ref(null);
       const show = ref(false);
@@ -81,7 +80,7 @@ export default {
     const { position, bgPosition, show, target } = usePreviewImg();
 
     return {
-      imgUrl,
+      imgIndex,
       position,
       bgPosition,
       show,
@@ -107,7 +106,6 @@ export default {
     .img {
       width: 400px;
       height: 400px;
-      background-color: skyblue;
       position: relative;
       cursor: move;
       .layer {
@@ -118,6 +116,11 @@ export default {
         top: 0;
         position: absolute;
       }
+    }
+    .imgElse {
+      width: 400px;
+      height: 400px;
+      background-color: #999;
     }
     .imgMini {
       width: 68px;
@@ -131,7 +134,6 @@ export default {
         li {
           width: 68px;
           height: 68px;
-          background-color: skyblue;
           overflow: hidden;
           img {
             transition: all 0.2s;
@@ -151,6 +153,7 @@ export default {
       height: 400px;
       position: absolute;
       right: -332px;
+      z-index: 2;
     }
   }
   .btn {
