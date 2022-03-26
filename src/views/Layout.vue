@@ -17,4 +17,9 @@ import { useStore } from "vuex";
 const store = useStore();
 store.dispatch("category/getList");
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+main {
+  width: 1240px;
+  margin: 0 auto;
+}
+</style>
