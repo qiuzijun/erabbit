@@ -64,7 +64,7 @@ export default {
     },
   },
   setup(props) {
-    // console.log(props.list);
+    // //console.log(props.list);
   },
 };
 </script>

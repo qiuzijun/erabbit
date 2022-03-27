@@ -20,7 +20,7 @@ export default {
     },
   },
   setup(props) {
-    console.log(props);
+    //console.log(props);
   },
 };
 </script>

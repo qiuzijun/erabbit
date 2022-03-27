@@ -105,6 +105,7 @@ export default {
       ul {
         display: none;
         li {
+          .hoverShadow();
           width: 220px;
           height: 300px;
           margin-right: 60px;

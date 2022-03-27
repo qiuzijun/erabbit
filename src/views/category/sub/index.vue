@@ -80,7 +80,7 @@ export default {
       getData();
     };
     const getAttrs = (attrs) => {
-      console.log(data);
+      //console.log(data);
       Data.value = [];
       data.value.attrs = attrs;
       getData();

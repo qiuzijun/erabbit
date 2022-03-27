@@ -49,7 +49,7 @@ export default {
         console.log(error);
         return;
       }
-      console.log(res);
+      //console.log(res);
       CityData.value = res;
     };
     const addressName = (item, name) => {

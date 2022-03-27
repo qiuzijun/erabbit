@@ -23,9 +23,9 @@ export default {
       container,
       ([{ isIntersecting }]) => {
         if (isIntersecting) {
-          console.log(1111);
+          //console.log(1111);
         } else {
-          console.log(2222);
+          //console.log(2222);
         }
       },
       {
@@ -43,6 +43,7 @@ a {
   padding: 20px 30px;
   text-align: center;
   transition: all 0.5s;
+  margin: 0 auto;
   p {
     overflow: hidden;
     text-overflow: ellipsis;

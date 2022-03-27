@@ -48,7 +48,7 @@ export default {
           skusName.value == data.specsName ||
           skusName.value == data.specsReverse
         ) {
-          console.log(data);
+          //console.log(data);
         }
       });
       item.specs = name;

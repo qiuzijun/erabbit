@@ -42,7 +42,7 @@ const profile = computed(() => {
     li {
       a {
         padding: 0 15px;
-        color: #cdcdcd;
+        color: #cdcdcd !important;
         line-height: 1;
         display: inline-block;
         i {

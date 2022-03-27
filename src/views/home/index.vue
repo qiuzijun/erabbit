@@ -40,7 +40,7 @@ const getNewList = async () => {
     console.log(error);
     return;
   }
-  console.log(res.result);
+  //console.log(res.result);
   state.list_1 = res.result;
 };
 
@@ -55,7 +55,7 @@ const getHotList = async () => {
     console.log(error);
     return;
   }
-  console.log(res.result);
+  //console.log(res.result);
   state.list_2 = res.result;
 };
 // 新鲜好物
