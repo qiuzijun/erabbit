@@ -4,9 +4,11 @@
       <ul>
         <template v-if="profile.token">
           <li>
-            <a href="javascript:;"><i class="iconfont icon-user"></i>周杰伦</a>
+            <a href="javascript:;"
+              ><i class="iconfont icon-user"></i>{{ profile.nickname }}</a
+            >
           </li>
-          <li><a href="javascript:;">退出登录</a></li>
+          <li><RouterLink to="/login" @click="LogOut">退出登录</RouterLink></li>
         </template>
         <template v-else>
           <li><RouterLink to="/login">请先登录</RouterLink></li>
@@ -30,6 +32,9 @@ const store = useStore();
 const profile = computed(() => {
   return store.state.user.profile;
 });
+const LogOut = () => {
+  store.commit("user/setUser", {});
+};
 </script>
 <style scoped lang="less">
 .app-topnav {

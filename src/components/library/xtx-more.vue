@@ -116,6 +116,7 @@ export default {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            margin-bottom: 0px !important;
           }
           p:last-child {
             color: @priceColor;

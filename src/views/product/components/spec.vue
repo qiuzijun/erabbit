@@ -7,7 +7,8 @@
       <span>{{ list.oldPrice }}</span>
     </p>
     <City />
-    <Specifications :specs="list.specs" :skus="list.skus" />
+    <Specifications :specs="list.specs" :skus="list.skus" @change="changeSku" />
+    <!-- <GoodsSku :goods="goods" @change="changeSku" /> -->
     <Number />
     <div class="button">加入购物车</div>
   </div>
@@ -15,6 +16,7 @@
 <script>
 import City from "./city.vue";
 import Specifications from "./Specifications.vue";
+// import GoodsSku from "./goods-sku.vue";
 import Number from "./number.vue";
 import { ref } from "vue";
 export default {
@@ -23,10 +25,23 @@ export default {
     City,
     Specifications,
     Number,
+    // GoodsSku,
   },
   props: {
-    list: Object,
-    default: () => {},
+    list: {
+      type: Object,
+      default: () => {},
+    },
+  },
+  setup(props, { emit }) {
+    // sku改变时候触发
+    const changeSku = (sku) => {
+      if (sku.skuId) {
+        console.log(sku);
+        emit("sku", sku);
+      }
+    };
+    return { changeSku };
   },
 };
 </script>

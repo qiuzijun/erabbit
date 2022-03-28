@@ -1,7 +1,7 @@
 <template>
   <div class="product">
     <Picture :img="list.mainPictures" />
-    <Spec :list="list" />
+    <Spec :list="list" @sku="sku" />
   </div>
   <Relevant :list="relevant" />
   <div class="ProductDetails">
@@ -87,10 +87,6 @@ export default {
         return;
       }
       const { result } = res;
-
-      result.specs.forEach((element) => {
-        element.specs = "";
-      });
       result.skus.forEach((sku) => {
         const sortSpecs = [];
         result.specs.forEach((spec) => {
@@ -185,6 +181,11 @@ export default {
       dataPage.value.page = e;
       getEvaluatePage();
     };
+    const sku = (sku) => {
+      list.value.price = sku.price;
+      list.value.oldPrice = sku.oldPrice;
+      list.value.inventory = sku.inventory;
+    };
     watch(
       () => route.params.id,
       (newVal) => {
@@ -213,6 +214,7 @@ export default {
       filterName,
       filterHot,
       pageIndex,
+      sku,
     };
   },
 };

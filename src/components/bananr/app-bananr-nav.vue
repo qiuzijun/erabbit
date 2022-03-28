@@ -96,7 +96,7 @@ const listShow = (i) => {
         overflow: hidden;
         a {
           font-size: 12px;
-          color: white;
+          color: white !important;
           margin-right: 5px;
         }
         a:first-child {
@@ -152,6 +152,9 @@ const listShow = (i) => {
             padding-left: 10px;
             line-height: 24px;
             width: 190px;
+            p {
+              margin-bottom: 0 !important;
+            }
             .name {
               font-size: 16px;
               color: #666;

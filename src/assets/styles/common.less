@@ -26,10 +26,12 @@ dd {
   padding: 0;
   margin: 0;
 }
-
+/deep/p {
+  margin-bottom: none !important;
+}
 a {
   text-decoration: none;
-  color: #333;
+  color: #333 !important;
   outline: none;
 }
 
@@ -41,9 +43,7 @@ input[type="text"],
 input[type="search"],
 input[type="password"],
 input[type="checkbox"] {
-  padding: 0;
   outline: none;
-  border: none;
   -webkit-appearance: none;
   &::placeholder {
     color: #ccc;

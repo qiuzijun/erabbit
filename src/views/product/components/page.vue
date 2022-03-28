@@ -134,6 +134,7 @@ export default {
       margin-right: 15px;
     }
     ul {
+      margin-bottom: none !important;
       li {
         padding: 5px 15px;
         background-color: white;

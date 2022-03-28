@@ -74,6 +74,7 @@ import AppHeaderNav from "./app-header-nav";
       width: 140px;
       padding-left: 5px;
       color: #666;
+      border: none;
     }
   }
   .cart {

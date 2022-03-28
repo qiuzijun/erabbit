@@ -143,6 +143,7 @@ export default {
               line-height: 66px;
               padding: 0 20px;
               background-color: rgba(0, 0, 0, 0.7);
+              margin-bottom: 0px !important;
             }
 
             p:last-child {
@@ -184,6 +185,7 @@ export default {
               p {
                 font-size: 16px;
                 margin-top: 10px;
+                margin-bottom: 0px !important;
               }
               .desc {
                 overflow: hidden;
@@ -201,7 +203,7 @@ export default {
                 transform: translate3d(0, 100%, 0);
                 transition: all 0.5s;
                 a {
-                  color: white;
+                  color: white !important;
                   span {
                     font-size: 18px;
                     line-height: 35px;

@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 /**
  * 帐号登录
- * @param {String} account - 用户名
- * @param {String} password - 密码
+ * @param {String} account - 用户名 xiaotuxian001
+ * @param {String} password - 密码 123456
  * @returns Promise
  */
  export const userAccountLogin = ({ account, password }) => {
@@ -23,5 +23,5 @@ export const userMobileLogin = ({ mobile, code }) => {
  * @returns Promise
  */
 export const userMobileLoginMsg= (mobile) => {
-    return request('/login/code', 'get', { mobile })
-  }
+  return request('/login/code', 'get', { mobile })
+}

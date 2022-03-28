@@ -6,6 +6,7 @@ import store from './store'
 import 'normalize.css'
 import '@/assets/styles/common.less'
 import ui from './components/library'
+import 'ant-design-vue/dist/antd.css';
 
 
 

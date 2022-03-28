@@ -8,47 +8,117 @@
         <i class="iconfont icon-msg"></i> 使用短信登录
       </a>
     </div>
+
     <div class="form">
       <template v-if="!isMsgLogin">
-        <div class="form-item">
-          <div class="input">
-            <i class="iconfont icon-user"></i>
-            <input type="text" placeholder="请输入用户名或手机号" />
+        <a-form
+          :model="formState"
+          name="normal_login"
+          class="login-form"
+          @finish="onFinish"
+        >
+          <a-form-item
+            label="用户名"
+            name="username"
+            :rules="[{ required: true, validator: username }]"
+          >
+            <a-input v-model:value="formState.username">
+              <template #prefix>
+                <UserOutlined class="site-form-item-icon" />
+              </template>
+            </a-input>
+          </a-form-item>
+
+          <a-form-item
+            label="密码"
+            name="password"
+            :rules="[{ required: true, validator: password }]"
+          >
+            <a-input-password v-model:value="formState.password">
+              <template #prefix>
+                <LockOutlined class="site-form-item-icon" />
+              </template>
+            </a-input-password>
+          </a-form-item>
+
+          <div class="login-form-wrap">
+            <a-form-item name="remember" no-style>
+              <a-checkbox v-model:checked="formState.remember"
+                >我已同意《隐私条款》《服务条款》</a-checkbox
+              >
+            </a-form-item>
           </div>
-          <!-- <div class="error"><i class="iconfont icon-warning" />请输入手机号</div> -->
-        </div>
-        <div class="form-item">
-          <div class="input">
-            <i class="iconfont icon-lock"></i>
-            <input type="password" placeholder="请输入密码" />
-          </div>
-        </div>
+
+          <a-form-item>
+            <a-button
+              :disabled="disabled"
+              type="primary"
+              html-type="submit"
+              class="login-form-button"
+            >
+              登录
+            </a-button>
+          </a-form-item>
+        </a-form>
       </template>
       <template v-else>
-        <div class="form-item">
-          <div class="input">
-            <i class="iconfont icon-user"></i>
-            <input type="text" placeholder="请输入手机号" />
+        <a-form
+          :model="formState_1"
+          name="normal_login"
+          class="login-form"
+          @finish="onFinish_1"
+        >
+          <a-form-item
+            label="手机号"
+            name="mobile"
+            :rules="[{ required: true, validator: mobile }]"
+          >
+            <a-input v-model:value="formState_1.mobile">
+              <template #prefix>
+                <TabletOutlined class="site-form-item-icon" />
+              </template>
+            </a-input>
+          </a-form-item>
+
+          <a-form-item
+            label="验证码"
+            name="code"
+            :rules="[{ required: true, validator: code }]"
+          >
+            <a-input v-model:value="formState_1.code">
+              <template #prefix>
+                <SafetyOutlined class="site-form-item-icon" />
+              </template>
+            </a-input>
+            <a-button type="primary" v-if="primary == 0" @click="sendOutCode"
+              >发送验证码</a-button
+            >
+            <a-button type="primary" loading v-else-if="primary == 1"
+              >Loading</a-button
+            >
+            <a-button type="primary" v-else>{{ time }}秒后重新发送</a-button>
+          </a-form-item>
+
+          <div class="login-form-wrap">
+            <a-form-item name="remember" no-style>
+              <a-checkbox v-model:checked="formState_1.remember"
+                >我已同意《隐私条款》《服务条款》</a-checkbox
+              >
+            </a-form-item>
           </div>
-        </div>
-        <div class="form-item">
-          <div class="input">
-            <i class="iconfont icon-code"></i>
-            <input type="password" placeholder="请输入验证码" />
-            <span class="code">发送验证码</span>
-          </div>
-        </div>
+
+          <a-form-item>
+            <a-button
+              :disabled="disabled_1"
+              type="primary"
+              html-type="submit"
+              class="login-form-button"
+            >
+              登录
+            </a-button>
+          </a-form-item>
+        </a-form>
       </template>
-      <div class="form-item">
-        <div class="agree">
-          <a-checkbox v-model:checked="form.isAgree"></a-checkbox>
-          <span>我已同意</span>
-          <a href="javascript:;">《隐私条款》</a>
-          <span>和</span>
-          <a href="javascript:;">《服务条款》</a>
-        </div>
-      </div>
-      <a href="javascript:;" class="btn">登录</a>
     </div>
     <div class="action">
       <img
@@ -63,21 +133,198 @@
   </div>
 </template>
 <script>
-import { Checkbox } from "ant-design-vue";
-import { reactive, ref } from "vue";
+import { reactive, ref, computed, watch } from "vue";
+import {
+  Form,
+  FormItem,
+  Input,
+  InputPassword,
+  Button,
+  Checkbox,
+  message,
+} from "ant-design-vue";
+import {
+  UserOutlined,
+  LockOutlined,
+  SafetyOutlined,
+  TabletOutlined,
+} from "@ant-design/icons-vue";
+import veeSchema from "@/utils/vee-validate-schema";
+import { userAccountLogin } from "@/api/user.js";
+import { useStore } from "vuex";
+import { useRoute, useRouter } from "vue-router";
 export default {
   name: "LoginForm",
   components: {
+    AForm: Form,
+    AFormItem: FormItem,
+    AInput: Input,
+    AInputPassword: InputPassword,
+    AButton: Button,
     ACheckbox: Checkbox,
+    UserOutlined,
+    LockOutlined,
+    SafetyOutlined,
+    TabletOutlined,
   },
+
   setup() {
     // 是否短信登录
     const isMsgLogin = ref(false);
-    // 表单信息对象
-    const form = reactive({
-      isAgree: true,
+    const primary = ref(0);
+    const time = ref(60);
+    const formState = reactive({
+      username: "",
+      password: "",
+      remember: true,
     });
-    return { isMsgLogin, form };
+    const formState_1 = reactive({
+      mobile: "",
+      code: "",
+      remember: true,
+    });
+    let username = async (_rule, value) => {
+      if (value === "") {
+        return Promise.reject("请输入用户名!");
+      } else {
+        if (formState.username !== "") {
+          const account = veeSchema.account(formState.username);
+          if (account == true) {
+            return Promise.resolve();
+          } else {
+            return Promise.reject(account);
+          }
+        }
+
+        return Promise.resolve();
+      }
+    };
+    let password = async (_rule, value) => {
+      if (value === "") {
+        return Promise.reject("请输入密码!");
+      } else {
+        if (formState.password !== "") {
+          const password = veeSchema.password(formState.password);
+          if (password == true) {
+            return Promise.resolve();
+          } else {
+            return Promise.reject(password);
+          }
+        }
+
+        return Promise.resolve();
+      }
+    };
+    let mobile = async (_rule, value) => {
+      if (value === "") {
+        return Promise.reject("请输入手机号!");
+      } else {
+        if (formState_1.mobile !== "") {
+          const mobile = veeSchema.mobile(formState_1.mobile);
+          if (mobile == true) {
+            return Promise.resolve();
+          } else {
+            return Promise.reject(mobile);
+          }
+        }
+
+        return Promise.resolve();
+      }
+    };
+    let code = async (_rule, value) => {
+      if (value === "") {
+        return Promise.reject("请输入验证码!");
+      } else {
+        if (formState_1.code !== "") {
+          const code = veeSchema.code(formState_1.code);
+          if (code == true) {
+            return Promise.resolve();
+          } else {
+            return Promise.reject(code);
+          }
+        }
+
+        return Promise.resolve();
+      }
+    };
+    const store = useStore();
+    const route = useRoute();
+    const router = useRouter();
+    // 账号密码登录
+    const onFinish = (values) => {
+      if (!values.remember) {
+        message.warning("请勾选《隐私条款》《服务条款》");
+      } else {
+        console.log("Success:", values);
+        userAccountLogin({
+          account: values.username,
+          password: values.password,
+        })
+          .then(({ result }) => {
+            // console.log(result);
+            // 1. 存储信息
+            const { id, account, nickname, avatar, token, mobile } = result;
+            store.commit("user/setUser", {
+              id,
+              account,
+              nickname,
+              avatar,
+              token,
+              mobile,
+            });
+            // 2. 提示
+            message.success("登录成功");
+            // 3. 跳转
+            router.push(route.query.redirectUrl || "/");
+          })
+          .catch((err) => {
+            message.error(`${err}登录失败`);
+          });
+      }
+    };
+    const onFinish_1 = (values) => {
+      if (!values.remember) message.warning("请勾选《隐私条款》《服务条款》");
+      else console.log("Success:", values);
+    };
+
+    const disabled = computed(() => {
+      return !(formState.username && formState.password);
+    });
+    const disabled_1 = computed(() => {
+      return !(formState_1.mobile && formState_1.code);
+    });
+    const sendOutCode = () => {
+      primary.value = 1;
+      setTimeout(() => {
+        primary.value = 2;
+      }, 1000);
+      const timer = setInterval(() => {
+        time.value--;
+      }, 1000);
+      watch(time, (newVal) => {
+        if (newVal == 0) {
+          clearInterval(timer);
+          primary.value = 0;
+          time.value = 60;
+        }
+      });
+    };
+    return {
+      isMsgLogin,
+      formState,
+      formState_1,
+      username,
+      password,
+      mobile,
+      code,
+      onFinish,
+      onFinish_1,
+      disabled,
+      disabled_1,
+      sendOutCode,
+      time,
+      primary,
+    };
   },
 };
 </script>
@@ -95,77 +342,13 @@ export default {
   }
   .form {
     padding: 0 40px;
-    &-item {
-      margin-bottom: 28px;
-      .input {
-        position: relative;
-        height: 36px;
-        > i {
-          width: 34px;
-          height: 34px;
-          background: #cfcdcd;
-          color: #fff;
-          position: absolute;
-          left: 1px;
-          top: 1px;
-          text-align: center;
-          line-height: 34px;
-          font-size: 18px;
-        }
-        input {
-          padding-left: 44px;
-          border: 1px solid #cfcdcd;
-          height: 36px;
-          line-height: 36px;
-          width: 100%;
-          &.error {
-            border-color: @priceColor;
-          }
-          &.active,
-          &:focus {
-            border-color: @xtxColor;
-          }
-        }
-        .code {
-          position: absolute;
-          right: 1px;
-          top: 1px;
-          text-align: center;
-          line-height: 34px;
-          font-size: 14px;
-          background: #f5f5f5;
-          color: #666;
-          width: 90px;
-          height: 34px;
-          cursor: pointer;
-        }
-      }
-      > .error {
-        position: absolute;
-        font-size: 12px;
-        line-height: 28px;
-        color: @priceColor;
-        i {
-          font-size: 14px;
-          margin-right: 2px;
-        }
-      }
-    }
-    .agree {
-      a {
-        color: #069;
-      }
-    }
-    .btn {
-      display: block;
+    .login-form-button {
       width: 100%;
-      height: 40px;
-      color: #fff;
-      text-align: center;
-      line-height: 40px;
-      background: @xtxColor;
-      &.disabled {
-        background: #cfcdcd;
+    }
+    /deep/.ant-form-item-control-input-content {
+      display: flex;
+      .ant-btn {
+        margin-left: 15px;
       }
     }
   }
