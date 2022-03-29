@@ -133,7 +133,7 @@
   </div>
 </template>
 <script>
-import { reactive, ref, computed, watch } from "vue";
+import { reactive, ref, computed, watch, onUnmounted } from "vue";
 import {
   Form,
   FormItem,
@@ -150,7 +150,11 @@ import {
   TabletOutlined,
 } from "@ant-design/icons-vue";
 import veeSchema from "@/utils/vee-validate-schema";
-import { userAccountLogin } from "@/api/user.js";
+import {
+  userAccountLogin,
+  userMobileLoginMsg,
+  userMobileLogin,
+} from "@/api/user.js";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 export default {
@@ -283,8 +287,32 @@ export default {
       }
     };
     const onFinish_1 = (values) => {
-      if (!values.remember) message.warning("请勾选《隐私条款》《服务条款》");
-      else console.log("Success:", values);
+      if (!values.remember) {
+        message.warning("请勾选《隐私条款》《服务条款》");
+      } else {
+        console.log("Success:", values);
+        userMobileLogin({ mobile: formState_1.mobile, code: formState_1.code })
+          .then(({ result }) => {
+            // console.log(result);
+            // 1. 存储信息
+            const { id, account, nickname, avatar, token, mobile } = result;
+            store.commit("user/setUser", {
+              id,
+              account,
+              nickname,
+              avatar,
+              token,
+              mobile,
+            });
+            // 2. 提示
+            message.success("登录成功");
+            // 3. 跳转
+            router.push(route.query.redirectUrl || "/");
+          })
+          .catch((err) => {
+            message.error(`${err.message}`);
+          });
+      }
     };
 
     const disabled = computed(() => {
@@ -293,22 +321,35 @@ export default {
     const disabled_1 = computed(() => {
       return !(formState_1.mobile && formState_1.code);
     });
-    const sendOutCode = () => {
-      primary.value = 1;
-      setTimeout(() => {
-        primary.value = 2;
-      }, 1000);
-      const timer = setInterval(() => {
+    // 定时器
+    const timer = () =>
+      setInterval(() => {
         time.value--;
       }, 1000);
+
+    const sendOutCode = () => {
+      primary.value = 1;
+      userMobileLoginMsg(formState_1.mobile)
+        .then((data) => {
+          primary.value = 2;
+          message.success("发送短信成功");
+        })
+        .catch((err) => {
+          primary.value = 2;
+          message.error(`${err.message}`);
+        });
+      timer();
       watch(time, (newVal) => {
         if (newVal == 0) {
-          clearInterval(timer);
+          clearInterval(timer());
           primary.value = 0;
           time.value = 60;
         }
       });
     };
+    onUnmounted(() => {
+      clearInterval(timer());
+    });
     return {
       isMsgLogin,
       formState,

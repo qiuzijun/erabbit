@@ -11,6 +11,16 @@
         <a class="curr" href="#">
           <i class="iconfont icon-cart"></i><em>2</em>
         </a>
+        <div class="cartList">
+          <Cart />
+          <div class="footer">
+            <div class="total">
+              <p>共 13 件商品</p>
+              <p>¥7624.8</p>
+            </div>
+            <div class="button">去购物车结算</div>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -18,9 +28,10 @@
 
 <script setup>
 import AppHeaderNav from "./app-header-nav";
+import Cart from "../components/library/cart.vue";
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .app-header {
   background: #fff;
   .container {
@@ -79,6 +90,7 @@ import AppHeaderNav from "./app-header-nav";
   }
   .cart {
     width: 50px;
+    position: relative;
     .curr {
       height: 32px;
       line-height: 32px;
@@ -100,6 +112,78 @@ import AppHeaderNav from "./app-header-nav";
         font-size: 12px;
         border-radius: 10px;
         font-family: Arial;
+      }
+    }
+    .cartList {
+      width: 400px;
+      height: 400px;
+      position: absolute;
+      top: 50px;
+      right: 0;
+      box-shadow: 0px 0px 6px 0px #999;
+      opacity: 0;
+      transition: all 0.4s 0.2s;
+      transform: translateY(-200px) scaleY(0);
+      background: #fff;
+      border-radius: 4px;
+      padding-top: 10px;
+      z-index: 2;
+      cursor: pointer;
+      &::before {
+        content: "";
+        position: absolute;
+        right: 14px;
+        top: -10px;
+        width: 20px;
+        height: 20px;
+        background: #fff;
+        transform: scaleX(0.6) rotate(45deg);
+        box-shadow: -3px -3px 5px #999;
+        z-index: 1;
+      }
+      .footer {
+        width: 400px;
+        height: 70px;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        background: #f8f8f8;
+        align-items: center;
+        .total {
+          padding-left: 10px;
+          color: #999;
+          P {
+            margin-bottom: 0px !important;
+          }
+          p:first-child {
+            color: #999;
+            margin-top: 5px;
+          }
+          p:last-child {
+            font-size: 18px;
+            color: @priceColor;
+          }
+        }
+        .button {
+          width: 180px;
+          height: 50px;
+          font-size: 16px;
+          color: @xtxColor;
+          background: #e6faf6;
+          text-align: center;
+          line-height: 50px;
+          border: 1px solid @xtxColor;
+          border-radius: 4px;
+          outline: none;
+          cursor: pointer;
+        }
+      }
+    }
+    &:hover {
+      .cartList {
+        opacity: 1;
+        transition: all 0.4s 0.2s;
+        transform: none;
       }
     }
   }
