@@ -42,6 +42,7 @@ const LogOut = () => {
   ul {
     display: flex;
     height: 53px;
+    margin-bottom: 0px !important;
     justify-content: flex-end;
     align-items: center;
     li {

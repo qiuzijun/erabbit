@@ -8,15 +8,15 @@
         <input type="text" placeholder="搜一搜" />
       </div>
       <div class="cart">
-        <a class="curr" href="#">
-          <i class="iconfont icon-cart"></i><em>2</em>
-        </a>
-        <div class="cartList">
-          <Cart />
+        <RouterLink to="/cart" class="curr">
+          <i class="iconfont icon-cart"></i><em>{{ count }}</em>
+        </RouterLink>
+        <div class="cartList" :class="active ? 'active' : ''">
+          <Cart :list="list" />
           <div class="footer">
             <div class="total">
-              <p>共 13 件商品</p>
-              <p>¥7624.8</p>
+              <p>共 {{ count }} 件商品</p>
+              <p>¥{{ priceAll }}</p>
             </div>
             <div class="button">去购物车结算</div>
           </div>
@@ -25,10 +25,39 @@
     </div>
   </header>
 </template>
-
 <script setup>
 import AppHeaderNav from "./app-header-nav";
 import Cart from "../components/library/cart.vue";
+import { ref, watch } from "vue";
+import { useStore } from "vuex";
+import { computed } from "vue-demi";
+import { getToken } from "@/utils/auth.js";
+import { useRoute } from "vue-router";
+const store = useStore();
+const route = useRoute();
+const count = ref(0);
+const priceAll = ref(0);
+const active = ref(null);
+store.dispatch("cart/getList");
+const list = computed(() => {
+  return store.state.cart.list;
+});
+watch(
+  [() => store.state.cart.list, () => route],
+  (newVal) => {
+    count.value = 0;
+    priceAll.value = 0;
+    newVal[0].forEach((data) => {
+      count.value += data.count;
+      priceAll.value += data.price * 1 * data.count;
+    });
+    if (newVal[1].path == "/cart") active.value = true;
+    else active.value = false;
+  },
+  { deep: true }
+);
+if (getToken()) active.value = false;
+else active.value = true;
 </script>
 
 <style lang="less" scoped>
@@ -178,6 +207,9 @@ import Cart from "../components/library/cart.vue";
           cursor: pointer;
         }
       }
+    }
+    .active {
+      display: none;
     }
     &:hover {
       .cartList {

@@ -15,12 +15,16 @@ const routes = [
         
       },
       {
-        path:"/category/sub/:id",
+        path:"category/sub/:id",
         component:()=>import('../views/category/sub/index.vue'),
       },
       {
-        path:"/product/:id",
+        path:"product/:id",
         component:()=>import('../views/product/index.vue'),
+      },
+      {
+        path:"cart",
+        component:()=>import('../views/cart/index.vue'),
       }
     ]
   }

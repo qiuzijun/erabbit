@@ -1,30 +1,25 @@
 <template>
   <div class="carts" ref="carts_h" @scroll="listScroll">
     <ul ref="ul_h">
-      <li v-for="(item, index) in 5" :key="index">
+      <li v-for="item in list" :key="item.id">
         <a href="#">
-          <img
-            src="https://yanxuan-item.nosdn.127.net/50db51cb0a25b0d346ce62b22b5e0f92.png"
-            alt=""
-            width="80px"
-            height="80px"
-          />
+          <img v-lazyload="item.picture" alt="" width="80px" height="80px" />
           <div class="content">
-            <p>拼色更童趣，儿童撞色T恤110-160cm</p>
-            <p>颜色:藏青 C尺码:160cm</p>
+            <p>{{ item.name }}</p>
+            <p>{{ item.attrsText }}</p>
           </div>
           <div class="right">
-            <p>￥79.00</p>
-            <p>x2</p>
+            <p>￥{{ item.price }}</p>
+            <p>x{{ item.count }}</p>
           </div>
-          <div class="delete">
+          <div class="delete" @click="deleteCart(item.skuId)">
             <CloseOutlined />
           </div>
         </a>
       </li>
     </ul>
   </div>
-  <div class="scrollBody" ref="scrollBody_h">
+  <div class="scrollBody" ref="scrollBody_h" :class="active ? 'active' : ''">
     <div
       class="scrollContent"
       ref="scrollContent_h"
@@ -35,16 +30,36 @@
 <script>
 import { onMounted, ref } from "vue";
 import { CloseOutlined } from "@ant-design/icons-vue";
+import { useStore } from "vuex";
 export default {
   name: "Cart",
   components: {
     CloseOutlined,
   },
-  setup(props) {
+  props: {
+    list: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  setup(props, { emit }) {
+    const active = ref(false);
     const carts_h = ref(null);
     const ul_h = ref(null);
     const scrollBody_h = ref(null);
     const scrollContent_h = ref(null);
+    const store = useStore();
+    const isActive = () => {
+      const cartsH = carts_h.value.offsetHeight;
+      const ulH = ul_h.value.offsetHeight;
+      if (ulH <= cartsH) active.value = true;
+      else active.value = false;
+    };
+    //
+    // 删除购物车
+    const deleteCart = (id) => {
+      store.dispatch("cart/deleteList", id);
+    };
     // 计算滚动条高度
     const rollerHeight = () => {
       const cartsH = carts_h.value.offsetHeight;
@@ -89,15 +104,18 @@ export default {
       };
     };
     onMounted(() => {
+      isActive();
       rollerHeight();
     });
     return {
+      active,
       carts_h,
       ul_h,
       scrollBody_h,
       scrollContent_h,
       listScroll,
       songSheetMouseMove,
+      deleteCart,
     };
   },
 };
@@ -193,5 +211,8 @@ export default {
       background-color: #cccccc;
     }
   }
+}
+.active {
+  display: none;
 }
 </style>
