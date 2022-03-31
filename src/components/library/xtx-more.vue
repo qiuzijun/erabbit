@@ -15,7 +15,7 @@
         <transition name="fade">
           <ul v-if="data.length">
             <li v-for="item in data" :key="item.id">
-              <a href="#">
+              <RouterLink :to="`/product/${item.id}`">
                 <img v-lazyload="item.picture" :alt="item.name" />
                 <template v-if="item.price">
                   <p>{{ item.name }}</p>
@@ -25,7 +25,7 @@
                   <p>{{ item.title }}</p>
                   <p>{{ item.alt }}</p>
                 </template>
-              </a>
+              </RouterLink>
             </li>
           </ul>
           <HomeSkeleton bg="#f0f9f4" v-else />

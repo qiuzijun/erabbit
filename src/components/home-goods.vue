@@ -31,10 +31,10 @@
             <ul>
               <li v-for="item in list.goods" :key="item.id">
                 <div class="goodsItem">
-                  <a href="#" class="image">
+                  <RouterLink :to="`/product/${item.id}`" class="image">
                     <img v-lazyload="item.picture" :alt="item.name" />
-                  </a>
-                  <p>{{ item.name }}</p>
+                  </RouterLink>
+                  <p class="name">{{ item.name }}</p>
                   <p style="color: #666" class="desc">{{ item.desc }}</p>
                   <p style="font-size: 20px; color: #cf4444">
                     ¥{{ item.price }}
@@ -98,7 +98,7 @@ export default {
             background-color: @xtxColor;
             border-radius: 8px;
             a {
-              color: white;
+              color: white !important;
             }
           }
         }
@@ -158,16 +158,16 @@ export default {
         ul {
           display: flex;
           flex-flow: wrap;
+          margin-left: 15px;
           li {
-            width: 250px;
+            width: 245px;
             height: 300px;
-            padding: 0 10px;
             margin-bottom: 10px;
             position: relative;
             .goodsItem {
-              width: 250px;
+              width: 240px;
               height: 300px;
-              padding: 10px 30px;
+              padding: 10px 25px;
               position: absolute;
               overflow: hidden;
               border: 1px solid transparent;
@@ -184,8 +184,10 @@ export default {
               }
               p {
                 font-size: 16px;
-                margin-top: 10px;
                 margin-bottom: 0px !important;
+              }
+              .name {
+                margin-top: 10px;
               }
               .desc {
                 overflow: hidden;

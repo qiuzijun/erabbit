@@ -18,7 +18,9 @@
               <p>共 {{ count }} 件商品</p>
               <p>¥{{ priceAll }}</p>
             </div>
-            <div class="button">去购物车结算</div>
+            <div class="button">
+              <RouterLink to="/cart"> 去购物车结算 </RouterLink>
+            </div>
           </div>
         </div>
       </div>
@@ -205,6 +207,10 @@ else active.value = true;
           border-radius: 4px;
           outline: none;
           cursor: pointer;
+          a {
+            color: @xtxColor !important;
+            display: block;
+          }
         }
       }
     }

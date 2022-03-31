@@ -2,10 +2,10 @@
   <div class="top-category">
     <div class="container">
       <!-- 面包屑 -->
-      <XtxBread>
+      <!-- <XtxBread>
         <XtxBreadItem to="/">首页</XtxBreadItem>
         <XtxBreadItem>{{ topCategory.name }}</XtxBreadItem>
-      </XtxBread>
+      </XtxBread> -->
       <!-- 轮播图 -->
       <!-- 所有二级分类 -->
       <div class="sub-list">

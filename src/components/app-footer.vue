@@ -173,7 +173,7 @@ export default {
     a {
       height: 58px;
       line-height: 58px;
-      color: #fff;
+      color: #fff !important;
       font-size: 28px;
       i {
         font-size: 50px;
@@ -198,7 +198,7 @@ export default {
       margin-bottom: 20px;
     }
     a {
-      color: #999;
+      color: #999 !important;
       line-height: 1;
       padding: 0 10px;
       border-right: 1px solid #999;

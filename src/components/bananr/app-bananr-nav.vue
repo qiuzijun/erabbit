@@ -46,14 +46,14 @@
       <h4 v-else>品牌推荐 <span>根据您的购买或浏览记录推荐</span></h4>
       <ul>
         <li v-for="item in list[index].goods" :key="item.id">
-          <a href="#">
+          <RouterLink :to="`/product/${item.id}`">
             <img v-lazyload="item.picture" :alt="item.name" />
             <div class="info">
               <p class="name ellipsis-2">{{ item.name }}</p>
               <p class="desc ellipsis">{{ item.desc }}</p>
               <p class="price" v-show="item.price"><i>¥</i>{{ item.price }}</p>
             </div>
-          </a>
+          </RouterLink>
         </li>
       </ul>
     </div>

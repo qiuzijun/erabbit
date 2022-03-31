@@ -47,7 +47,9 @@
             </div>
           </div>
           <div class="x_j">¥{{ item.count * item.price * 1 }}</div>
-          <div class="c_z" @click="deleteCart(item.skuId)">删除</div>
+          <div class="c_z">
+            <Tp :skuId="item.skuId" />
+          </div>
         </li>
       </ul>
     </div>
@@ -84,10 +86,12 @@
 import { Checkbox, message } from "ant-design-vue";
 import { ref, watch, computed, onMounted, nextTick } from "vue";
 import { useStore } from "vuex";
+import Tp from "./components/Tp.vue";
 export default {
   name: "Cart",
   components: {
     ACheckbox: Checkbox,
+    Tp,
   },
   setup() {
     const checked = ref(false);
@@ -206,10 +210,7 @@ export default {
           });
       }
     };
-    // 删除单选商品
-    const deleteCart = (id) => {
-      store.dispatch("cart/deleteList", [id]);
-    };
+
     // 删除已选全部商品
     const deleteCartAll = () => {
       store.dispatch("cart/deleteList", cartList.value);
@@ -240,7 +241,6 @@ export default {
       checked1,
       checkbox,
       checkboxAll,
-      deleteCart,
       deleteCartAll,
     };
   },
