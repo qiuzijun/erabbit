@@ -58,7 +58,7 @@ export default {
     //
     // 删除购物车
     const deleteCart = (id) => {
-      store.dispatch("cart/deleteList", id);
+      store.dispatch("cart/deleteList", [id]);
     };
     // 计算滚动条高度
     const rollerHeight = () => {

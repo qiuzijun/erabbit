@@ -14,19 +14,19 @@
           <a-checkbox
             v-if="item.text == '全选'"
             v-model:checked="checked"
-            @change="checkbox"
+            @change="checkboxAll"
           ></a-checkbox>
           {{ item.text }}
         </li>
       </ul>
     </div>
-    <div class="tbody">
+    <div class="tbody" v-if="list.length > 0">
       <ul>
         <li v-for="item in list" :key="item.skuId">
           <div class="q_x">
             <a-checkbox
-              ref="checkboxS"
-              @change="checkboxAll($event, item.skuId)"
+              :checked="item.selected"
+              @change="checkbox($event, item.skuId)"
             ></a-checkbox>
           </div>
           <div class="x_x">
@@ -47,21 +47,30 @@
             </div>
           </div>
           <div class="x_j">¥{{ item.count * item.price * 1 }}</div>
-          <div class="c_z">删除</div>
+          <div class="c_z" @click="deleteCart(item.skuId)">删除</div>
         </li>
       </ul>
+    </div>
+    <div class="cartNone" v-else>
+      <div class="content">
+        <img src="../../assets/images/kong.png" alt="" />
+        <p>购物车内暂时没有商品</p>
+        <div class="button">
+          <RouterLink to="/"> 继续逛逛 </RouterLink>
+        </div>
+      </div>
     </div>
   </div>
   <div class="footer">
     <div class="left">
-      <a-checkbox @change="checkbox"></a-checkbox>
+      <a-checkbox @change="checkboxAll" v-model:checked="checked"></a-checkbox>
       <span>全选</span>
-      <span>删除商品</span>
+      <span @click="deleteCartAll">删除商品</span>
     </div>
     <div class="right">
       <div class="count">
         <span>共 {{ count }} 件商品，</span>
-        <span>已选择 7 件，</span>
+        <span>已选择 {{ selectCount }} 件，</span>
         <span>
           商品合计：
           <span> ¥{{ priceAll }}</span>
@@ -72,8 +81,8 @@
   </div>
 </template>
 <script>
-import { Checkbox } from "ant-design-vue";
-import { ref, watch, computed } from "vue";
+import { Checkbox, message } from "ant-design-vue";
+import { ref, watch, computed, onMounted, nextTick } from "vue";
 import { useStore } from "vuex";
 export default {
   name: "Cart",
@@ -82,9 +91,11 @@ export default {
   },
   setup() {
     const checked = ref(false);
-    const checkboxS = ref(false);
+    const checked1 = ref(false);
     const count = ref(0);
+    const selectCount = ref(0);
     const priceAll = ref(0);
+    const cartList = ref([]);
     const store = useStore();
     const list = computed(() => {
       return store.state.cart.list;
@@ -127,38 +138,110 @@ export default {
         color: "#666",
       },
     ]);
-    const checkbox = (e) => {
-      const { checked } = e.target;
-      const checkboxAll = checkboxS.value.checked;
-      console.log(checked);
-      console.log(checkboxAll);
+    // 全选商品
+    const checkboxAll = () => {
+      if (checked.value) {
+        if (list.value.length > 0) {
+          let arrId = [];
+          list.value.forEach((data) => {
+            arrId.push(data.skuId);
+          });
+          store
+            .dispatch("cart/selectedAllList", {
+              ids: arrId,
+              checked: checked.value,
+            })
+            .then((data) => {
+              list.value.forEach((data) => {
+                cartList.value.push(data.skuId);
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else {
+          message.warning("购物车内暂时没有商品");
+        }
+      } else {
+        let arrId = [];
+        list.value.forEach((data) => {
+          arrId.push(data.skuId);
+        });
+        store
+          .dispatch("cart/selectedAllList", {
+            ids: arrId,
+            checked: checked.value,
+          })
+          .then((data) => {
+            cartList.value = [];
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     };
-    const checkboxAll = (e, index) => {
+    // 单选商品
+    const checkbox = (e, id) => {
       const { checked } = e.target;
-      console.log(index);
-      console.log(checked);
+      if (checked) {
+        console.log(checked);
+        store
+          .dispatch("cart/selectedList", { id, checked })
+          .then((data) => {
+            cartList.value.push(id);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        store
+          .dispatch("cart/selectedList", { id, checked })
+          .then((data) => {
+            cartList.value = cartList.value.filter((data) => {
+              return data !== id;
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    };
+    // 删除单选商品
+    const deleteCart = (id) => {
+      store.dispatch("cart/deleteList", [id]);
+    };
+    // 删除已选全部商品
+    const deleteCartAll = () => {
+      store.dispatch("cart/deleteList", cartList.value);
     };
     watch(
       () => store.state.cart.list,
       (newVal) => {
         count.value = 0;
+        selectCount.value = 0;
         priceAll.value = 0;
         newVal.forEach((data) => {
+          if (data.selected) {
+            selectCount.value += data.count;
+            priceAll.value += data.price * 1 * data.count;
+          }
           count.value += data.count;
-          priceAll.value += data.price * 1 * data.count;
         });
       },
-      { deep: true }
+      { deep: true, immediate: true }
     );
     return {
       thead,
       list,
       count,
+      selectCount,
       priceAll,
       checked,
+      checked1,
       checkbox,
-      checkboxS,
       checkboxAll,
+      deleteCart,
+      deleteCartAll,
     };
   },
 };
@@ -285,6 +368,35 @@ export default {
         text-align: center;
         line-height: 120px;
         cursor: pointer;
+      }
+    }
+  }
+  .cartNone {
+    width: 100%;
+    height: 500px;
+    position: relative;
+    .content {
+      text-align: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      .button {
+        width: 180px;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+        color: white;
+        font-size: 15px;
+        font-weight: bold;
+        background-color: @xtxColor;
+        border-radius: 5px;
+        margin: 0 auto;
+        cursor: pointer;
+        a {
+          color: white !important;
+          display: block;
+        }
       }
     }
   }
