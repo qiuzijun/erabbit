@@ -13,7 +13,9 @@
 import AppTopnav from "@/components/app-topnav";
 import AppHeader from "@/components/app-header";
 import AppFooter from "@/components/app-footer";
+import { ref } from "vue";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 const store = useStore();
 store.dispatch("category/getList");
 </script>

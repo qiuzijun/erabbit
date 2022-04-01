@@ -13,6 +13,7 @@
     "ant-design-vue": "^2.2.8",
     "axios": "^0.26.1",
     "core-js": "^3.6.5",
+    "mockjs": "^1.1.0",
     "normalize.css": "^8.0.1",
     "qsjs": "^1.0.0",
     "vee-validate": "^4.0.3",

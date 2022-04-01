@@ -5,12 +5,12 @@
         <h3>
           {{ title }}
           <span>{{ name }}</span>
-          <template v-if="title == '新鲜好物'">
-            <a href="#">
-              <span> 查看全部</span>
-              <i class="iconfont icon-angle-right"></i>
-            </a>
-          </template>
+          <!-- <template> -->
+          <a href="javascript:;">
+            <span> 查看全部</span>
+            <i class="iconfont icon-angle-right"></i>
+          </a>
+          <!-- </template> -->
         </h3>
         <transition name="fade">
           <ul v-if="data.length">
@@ -74,8 +74,6 @@ export default {
   width: 100%;
   background-color: white;
   .content {
-    width: 1240px;
-    height: 541px;
     margin: 0 auto;
     h3 {
       width: 100%;
@@ -104,11 +102,10 @@ export default {
       display: flex;
       justify-content: space-between;
       li {
-        width: 306px;
-        height: 406px;
-        background-color: #f0f9f4;
+        width: 20%;
         .hoverShadow();
         a {
+          display: block;
           p {
             font-size: 22px;
             padding: 12px 30px 0 30px;

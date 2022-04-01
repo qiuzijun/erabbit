@@ -4,8 +4,9 @@
       <ul>
         <template v-if="profile.token">
           <li>
-            <a href="javascript:;"
-              ><i class="iconfont icon-user"></i>{{ profile.nickname }}</a
+            <RouterLink to="/member"
+              ><i class="iconfont icon-user active"></i
+              >{{ profile.nickname }}</RouterLink
             >
           </li>
           <li><RouterLink to="/login" @click="LogOut">退出登录</RouterLink></li>
@@ -34,6 +35,7 @@ const profile = computed(() => {
 });
 const LogOut = () => {
   store.commit("user/setUser", {});
+  store.commit("cart/setList", []);
 };
 </script>
 <style scoped lang="less">
@@ -56,7 +58,7 @@ const LogOut = () => {
           margin-right: 2px;
         }
         &:hover {
-          color: @xtxColor;
+          color: @xtxColor !important;
         }
       }
       ~ li {
