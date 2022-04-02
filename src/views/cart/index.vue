@@ -78,15 +78,18 @@
           <span> ¥{{ priceAll }}</span>
         </span>
       </div>
-      <div class="button">下单结算</div>
+      <div class="button">
+        <a href="javascript:;" @click="Place"> 下单结算 </a>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import { Checkbox, message } from "ant-design-vue";
-import { ref, watch, computed, onMounted, nextTick } from "vue";
+import { ref, watch, computed, onMounted, nextTick, watchEffect } from "vue";
 import { useStore } from "vuex";
 import Tp from "./components/Tp.vue";
+import { useRouter } from "vue-router";
 export default {
   name: "Cart",
   components: {
@@ -101,6 +104,7 @@ export default {
     const priceAll = ref(0);
     const cartList = ref([]);
     const store = useStore();
+    const router = useRouter();
     const list = computed(() => {
       return store.state.cart.list;
     });
@@ -188,7 +192,7 @@ export default {
     const checkbox = (e, id) => {
       const { checked } = e.target;
       if (checked) {
-        console.log(checked);
+        // console.log(checked);
         store
           .dispatch("cart/selectedList", { id, checked })
           .then((data) => {
@@ -215,6 +219,29 @@ export default {
     const deleteCartAll = () => {
       store.dispatch("cart/deleteList", cartList.value);
     };
+    // 下单
+    const Place = () => {
+      if (cartList.value.length > 0)
+        router.push({
+          path: "/checkout",
+        });
+      else message.warning("至少选择一样商品");
+    };
+    watchEffect(() => {
+      let index = 0;
+      let index_ = 0;
+      const list = store.state.cart.list;
+      list.forEach((data) => {
+        if (data.selected) {
+          index_++;
+          cartList.value.push(data);
+        } else {
+          index++;
+        }
+      });
+      if (index == list.length) checked.value = false;
+      else if (index_ == list.length) checked.value = true;
+    });
     watch(
       () => store.state.cart.list,
       (newVal) => {
@@ -242,6 +269,7 @@ export default {
       checkbox,
       checkboxAll,
       deleteCartAll,
+      Place,
     };
   },
 };
@@ -436,16 +464,19 @@ export default {
       }
     }
     .button {
-      width: 180px;
-      height: 50px;
-      text-align: center;
-      line-height: 50px;
-      color: white;
-      font-size: 15px;
-      font-weight: bold;
-      background-color: @xtxColor;
-      border-radius: 5px;
-      cursor: pointer;
+      a {
+        display: block;
+        width: 180px;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+        color: white !important;
+        font-size: 15px;
+        font-weight: bold;
+        background-color: @xtxColor;
+        border-radius: 5px;
+        cursor: pointer;
+      }
     }
   }
 }

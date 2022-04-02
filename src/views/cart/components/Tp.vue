@@ -3,7 +3,7 @@
     <p @click="active = true">删除</p>
     <teleport to="#app">
       <div class="mask" v-if="active">
-        <div class="content">
+        <div class="content" :class="active ? 'active' : ''">
           <div class="header">
             <p>温馨提示</p>
             <close-outlined
@@ -68,6 +68,7 @@ export default {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
+  transition: all 0.4s;
   .content {
     width: 400px;
     height: 200px;
@@ -76,8 +77,10 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -60%);
+    opacity: 0;
     padding: 15px;
+    transition: all 0.4s;
     .header {
       display: flex;
       justify-content: space-between;
@@ -115,6 +118,10 @@ export default {
         background-color: @xtxColor;
       }
     }
+  }
+  .active {
+    transform: translate(-50%, -50%);
+    opacity: 1;
   }
 }
 </style>

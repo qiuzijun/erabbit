@@ -6,8 +6,9 @@ import store from './store'
 import 'normalize.css'
 import '@/assets/styles/common.less'
 import ui from './components/library'
+import table from './components/tools/index.js'
 import 'ant-design-vue/dist/antd.css';
 import './mock'
 
 
-createApp(App).use(store).use(router).use(ui).mount('#app')
+createApp(App).use(store).use(router).use(ui).use(table).mount('#app')

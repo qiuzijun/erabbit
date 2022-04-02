@@ -67,6 +67,10 @@ const routes = [
           
         ]
       },
+      {
+        path:'checkout',
+        component:()=>import('../views/checkout/index.vue')
+      },
     ]
   }
 ]
