@@ -1,7 +1,7 @@
 <template>
   <div class="checkout">
     <h3>收货地址</h3>
-    <Address :userAddresses="defaultAddresser" />
+    <Address />
     <h3>商品信息</h3>
     <div class="table">
       <Table :columns="columns" :data="data" />
@@ -33,7 +33,6 @@ import { toRefs } from "@vueuse/shared";
 import { useStore } from "vuex";
 import Details from "./components/details.vue";
 import Address from "./components/address.vue";
-import { memberOrderPre } from "@/api/member";
 export default {
   name: "Checkout",
   components: {
@@ -75,28 +74,12 @@ export default {
           height: 60,
         },
       ],
-      userAddresses: [],
-      defaultAddresser: {},
     });
     const data = computed(() => {
       return store.state.cart.list.filter((data) => {
         return data.selected == true;
       });
     });
-    // console.log(data);
-    const getMemberOrderPre = () => {
-      memberOrderPre()
-        .then(({ result }) => {
-          state.userAddresses = result.userAddresses;
-          result.userAddresses.forEach((data) => {
-            if (data.isDefault == 0) {
-              state.defaultAddresser = data;
-            }
-          });
-        })
-        .catch((err) => {});
-    };
-    getMemberOrderPre();
     return {
       data,
       ...toRefs(state),

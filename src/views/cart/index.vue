@@ -159,11 +159,7 @@ export default {
               ids: arrId,
               checked: checked.value,
             })
-            .then((data) => {
-              list.value.forEach((data) => {
-                cartList.value.push(data.skuId);
-              });
-            })
+            .then((data) => {})
             .catch((err) => {
               console.log(err);
             });
@@ -180,9 +176,7 @@ export default {
             ids: arrId,
             checked: checked.value,
           })
-          .then((data) => {
-            cartList.value = [];
-          })
+          .then((data) => {})
           .catch((err) => {
             console.log(err);
           });
@@ -192,23 +186,16 @@ export default {
     const checkbox = (e, id) => {
       const { checked } = e.target;
       if (checked) {
-        // console.log(checked);
         store
           .dispatch("cart/selectedList", { id, checked })
-          .then((data) => {
-            cartList.value.push(id);
-          })
+          .then((data) => {})
           .catch((err) => {
             console.log(err);
           });
       } else {
         store
           .dispatch("cart/selectedList", { id, checked })
-          .then((data) => {
-            cartList.value = cartList.value.filter((data) => {
-              return data !== id;
-            });
-          })
+          .then((data) => {})
           .catch((err) => {
             console.log(err);
           });
@@ -221,6 +208,7 @@ export default {
     };
     // 下单
     const Place = () => {
+      console.log(cartList.value);
       if (cartList.value.length > 0)
         router.push({
           path: "/checkout",
@@ -239,7 +227,7 @@ export default {
           index++;
         }
       });
-      if (index == list.length) checked.value = false;
+      if (index == list.length) (checked.value = false), (cartList.value = []);
       else if (index_ == list.length) checked.value = true;
     });
     watch(

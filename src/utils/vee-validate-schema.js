@@ -20,6 +20,11 @@ export default {
       if (!/^1[3-9]\d{9}$/.test(value)) return '手机号格式错误'
       return true
     },
+    postalCode (value) {
+      if (!value) return '请输入邮政编码'
+      if (! /^[1-9][0-9]{5}$/.test(value)) return '邮政编码格式错误'
+      return true
+    },
     code (value) {
       if (!value) return '请输入验证码'
       if (!/^\d{6}$/.test(value)) return '验证码是6个数字'

@@ -26,7 +26,12 @@ export default {
             if(store.rootState.user.profile.token){
                 cartList().then(({result})=>{
                     // 获取数据成功，提交mutations进行数据修改
-                    store.commit('setList', result)
+                    const map = new Map()
+                    const data = result.filter(item=>{
+                        return !map.has(item.skuId) && map.set(item.skuId,1)
+                    })
+                    // console.log(data);
+                    store.commit('setList', data)
                 }).catch(err=>{
                     console.log(err);
                     return err
