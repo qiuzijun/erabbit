@@ -208,7 +208,7 @@ export default {
     };
     // 下单
     const Place = () => {
-      console.log(cartList.value);
+      // console.log(cartList.value);
       if (cartList.value.length > 0)
         router.push({
           path: "/checkout",

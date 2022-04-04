@@ -142,7 +142,7 @@
   </div>
 </template>
 <script>
-import { reactive, ref, watch, watchEffect } from "vue";
+import { onMounted, reactive, ref, watch, watchEffect } from "vue";
 import { memberOrderPre, memberAddress } from "@/api/member";
 import { toRefs } from "@vueuse/shared";
 import {
@@ -169,7 +169,7 @@ export default {
     ARadioGroup: RadioGroup,
     DownOutlined,
   },
-  setup(props) {
+  setup(props, { emit }) {
     const active = ref(false);
     const addActive = ref(false);
     const activeAddresses = ref(null);
@@ -268,7 +268,7 @@ export default {
     const getMemberOrderPre = () => {
       memberOrderPre()
         .then(({ result }) => {
-          console.log(result);
+          //   console.log(result);
           state.userAddresses = result.userAddresses;
           result.userAddresses.forEach((data) => {
             if (data.isDefault == 0) {
@@ -315,7 +315,7 @@ export default {
     watchEffect(() => {
       let defaultAddresser = state.defaultAddresser;
       activeAddresses.value = defaultAddresser.id;
-      console.log(activeAddresses.value);
+      emit("getAddressId", defaultAddresser.id);
     });
     getMemberOrderPre();
     getCity();

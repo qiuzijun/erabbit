@@ -1,7 +1,7 @@
 <template>
   <div class="checkout">
     <h3>收货地址</h3>
-    <Address />
+    <Address @getAddressId="getAddressId" />
     <h3>商品信息</h3>
     <div class="table">
       <Table :columns="columns" :data="data" />
@@ -20,19 +20,23 @@
     </div>
     <h3>金额明细</h3>
     <div class="details">
-      <Details :data="data" />
+      <Details :data="data" @payable="payable" />
     </div>
     <div class="Submit">
-      <button>提交订单</button>
+      <button @click="Submit">提交订单</button>
     </div>
   </div>
 </template>
 <script>
-import { computed, reactive } from "vue";
+import { computed, reactive, onMounted, ref } from "vue";
 import { toRefs } from "@vueuse/shared";
 import { useStore } from "vuex";
 import Details from "./components/details.vue";
 import Address from "./components/address.vue";
+import { useRouter } from "vue-router";
+import { memberOrder } from "@/api/member";
+import { message } from "ant-design-vue";
+
 export default {
   name: "Checkout",
   components: {
@@ -41,6 +45,8 @@ export default {
   },
   setup(props) {
     const store = useStore();
+    const router = useRouter();
+    const pay = ref(0);
     const state = reactive({
       columns: [
         {
@@ -74,14 +80,63 @@ export default {
           height: 60,
         },
       ],
+      pay: {
+        addressId: "",
+        buyerMessage: "",
+        deliveryTimeType: 1,
+        goods: [],
+        payChannel: 1,
+        payType: 1,
+      },
     });
+
     const data = computed(() => {
       return store.state.cart.list.filter((data) => {
         return data.selected == true;
       });
     });
+    const getAddressId = (id) => {
+      state.pay.addressId = id;
+    };
+    const getPay = () => {
+      data.value.forEach((item) => {
+        state.pay.goods.push({
+          skuId: item.skuId,
+          count: item.count,
+        });
+      });
+      // console.log(state.pay.goods);
+    };
+    const payable = (data) => {
+      pay.value = data;
+    };
+    const Submit = () => {
+      memberOrder(state.pay)
+        .then(({ result }) => {
+          router.push({
+            path: `/member/pay/${result.id}`,
+            query: {
+              pay: pay.value,
+            },
+          });
+          message.success("提交订单成功");
+          store.dispatch("cart/getList");
+        })
+        .catch(({ message }) => {
+          message.error();
+          ("message");
+        });
+    };
+
+    onMounted(() => {
+      getPay();
+      getAddressId();
+    });
     return {
       data,
+      Submit,
+      payable,
+      getAddressId,
       ...toRefs(state),
     };
   },

@@ -34,3 +34,42 @@ import request from "../utils/request";
       isDefault,
     })
   }
+
+/**
+ * 
+ * 提交订单
+ */
+export const memberOrder = ({
+    goods,
+    addressId,
+    deliveryTimeType,
+    payType,
+    payChannel,
+    buyerMessage	
+})=>{
+    return request('/member/order', 'post',{
+    goods,
+    addressId,
+    deliveryTimeType,
+    payType,
+    payChannel,
+    buyerMessage
+    })
+}
+/**
+ * 获取订单详情
+ * @param {String} id - 订单ID
+ */
+ export const findOrderDetail = (id) => {
+    return request('/member/order/' + id, 'get')
+  }
+/**
+ * 查询订单列表
+ * @param {Number} orderState - 订单状态，1为待付款、2为待发货、3为待收货、4为待评价、5为已完成、6为已取消，未传该参数或0为全部
+ * @param {Number} page - 页码
+ * @param {Number} pageSize - 每页条数
+ * @returns
+ */
+ export const findOrderList = ({ orderState, page, pageSize }) => {
+    return request('/member/order', 'get', { orderState, page, pageSize })
+  }

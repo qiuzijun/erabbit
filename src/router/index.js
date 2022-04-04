@@ -68,6 +68,10 @@ const routes = [
         ]
       },
       {
+        path:'member/pay/:id',
+        component:()=>import('../views/member/pay/index.vue')
+      },
+      {
         path:'checkout',
         component:()=>import('../views/checkout/index.vue')
       },

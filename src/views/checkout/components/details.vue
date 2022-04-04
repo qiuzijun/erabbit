@@ -23,7 +23,7 @@
   </div>
 </template>
 <script>
-import { reactive } from "vue";
+import { onMounted, reactive, nextTick } from "vue";
 import { toRefs } from "@vueuse/shared";
 export default {
   name: "Details",
@@ -33,7 +33,7 @@ export default {
       default: () => [],
     },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const state = reactive({
       total: {
         count: 0,
@@ -48,6 +48,9 @@ export default {
       state.total.postFee = Math.max(state.total.postFee, data.postFee);
     });
     state.total.payable = state.total.postFee + state.total.price;
+    nextTick(() => {
+      emit("payable", state.total.payable);
+    });
     return {
       ...toRefs(state),
     };

@@ -96,7 +96,7 @@ export default {
 <style lang="less" scoped>
 .page {
   width: 100%;
-  margin: 20px 0;
+  padding: 20px 0;
   display: flex;
   justify-content: center;
   .content {
@@ -134,7 +134,7 @@ export default {
       margin-right: 15px;
     }
     ul {
-      margin-bottom: none !important;
+      margin-bottom: 0px !important;
       li {
         padding: 5px 15px;
         background-color: white;
