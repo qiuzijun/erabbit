@@ -9,11 +9,11 @@ export const memberList_1 = [
             },
             {
                 name:'消息通知',
-                key:'/xinxi'
+                key:'/member/message'
             },
             {
                 name:'安全设置',
-                key:'/anquan'
+                key:'/member/security'
             },
             {
                 name:'地址管理',
@@ -22,19 +22,19 @@ export const memberList_1 = [
             },
             {
                 name:'我的积分',
-                key:'/jifen'
+                key:'/member/myPoints'
             },
             {
                 name:'我的足迹',
-                key:'/zhuji'
+                key:'/member/myTracks'
             },
             {
                 name:'邀请有礼',
-                key:'/yaoqing'
+                key:'/member/politeInvitation'
             },
             {
                 name:'幸运抽奖',
-                key:'/xinxyun'
+                key:'/member/luckyDraw'
             },
         ]
     },
@@ -49,19 +49,19 @@ export const memberList_2 = [
             },
             {
                 name:'优惠券',
-                key:'/youhui'
+                key:'/member/coupon'
             },
             {
                 name:'礼品卡',
-                key:'/liping'
+                key:'/member/giftCard'
             },
             {
                 name:'评价晒单',
-                key:'/pingjia'
+                key:'/member/evaluation'
             },
             {
                 name:'售后服务',
-                key:'/fuwu'
+                key:'/member/afterSale'
             }
         ]
     },
@@ -70,15 +70,15 @@ export const memberList_2 = [
         children:[
             {
                 name:'收藏的商品',
-                key:'/shouc'
+                key:'/member/collectibleGoods'
             },
             {
                 name:'收藏的专题',
-                key:'/zhuanti'
+                key:'/member/collectionTopics'
             },
             {
                 name:'关注的品牌',
-                key:'/pingpai'
+                key:'/member/concernedBrands'
             }
         ]
     },
@@ -87,11 +87,11 @@ export const memberList_2 = [
         children:[
             {
                 name:'帮助中心',
-                key:'/zhongxing'
+                key:'/member/helpCenter'
             },
             {
                 name:'在线客服',
-                key:'/kefu'
+                key:'/member/onlineService'
             }
         ]
     },

@@ -17,6 +17,7 @@
         :key="item.id"
         :order="item"
         :orderState="orderState"
+        @deleteOrderLists="deleteOrderLists"
       />
     </div>
   </div>
@@ -74,9 +75,13 @@ export default {
       active.value = id;
       emit("pageIndex", id);
     };
+    const deleteOrderLists = () => {
+      emit("deleteOrder");
+    };
     return {
       active,
       pageIndex,
+      deleteOrderLists,
       ...toRefs(state),
     };
   },

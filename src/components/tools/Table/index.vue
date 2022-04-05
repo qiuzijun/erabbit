@@ -13,18 +13,23 @@
       <ul class="tbody">
         <li v-for="item in data" :key="item.id">
           <div class="goods">
-            <img v-lazyload="item.picture" alt="" />
+            <img v-lazyload="item.picture" alt="" v-if="item.picture" />
+            <img v-lazyload="item.image" alt="" v-if="item.image" />
             <div class="text">
               <p>{{ item.name }}</p>
               <p>{{ item.attrsText }}</p>
             </div>
           </div>
-          <div class="price">¥{{ item.price }}</div>
+          <div class="price">¥{{ item.price || item.curPrice }}</div>
           <div class="number">
-            {{ item.count }}
+            {{ item.count || item.quantity }}
           </div>
-          <div class="subtotal">¥{{ item.price * item.count * 1 }}</div>
-          <div class="paid">¥{{ item.price * item.count * 1 }}</div>
+          <div class="subtotal">
+            ¥{{ item.price * item.count * 1 || item.curPrice * item.quantity }}
+          </div>
+          <div class="paid">
+            ¥{{ item.price * item.count * 1 || item.curPrice * item.quantity }}
+          </div>
         </li>
       </ul>
     </div>

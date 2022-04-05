@@ -73,3 +73,19 @@ export const memberOrder = ({
  export const findOrderList = ({ orderState, page, pageSize }) => {
     return request('/member/order', 'get', { orderState, page, pageSize })
   }
+/**
+ * 删除订单
+ * @param {Array} ids 
+ * @returns
+ */
+ export const deleteOrderLists = ({ ids }) => {
+    return request('/member/order', 'delete', { ids })
+  }
+/**
+ * 取消订单
+ * @param {String} id
+ * @returns
+ */
+ export const findOrderCancel = ({ id ,cancelReason}) => {
+    return request(`/member/order/${id}/cancel`, 'put', {cancelReason})
+  }
