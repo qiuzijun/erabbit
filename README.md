@@ -1,6 +1,8 @@
 # eraddit-clien-pc
 
 小兔鲜项目
+支付功能没有做
+
 
 ## Project setup
 
