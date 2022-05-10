@@ -1,6 +1,6 @@
 # eraddit-clien-pc
 
-黑马小兔鲜项目
+小兔鲜项目
 
 ## Project setup
 
